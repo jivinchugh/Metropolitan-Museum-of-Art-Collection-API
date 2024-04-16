@@ -45,7 +45,7 @@ const Artwork = () => {
                 setArtworkList([]);
             }
         }
-    }, [data]);
+    }, [data, validObjectIDList]);
 
     if (error) {
         return <Error statusCode={404} />;
@@ -88,6 +88,5 @@ const Artwork = () => {
             )}
         </>
     );
-};
-
+}    
 export default Artwork;
