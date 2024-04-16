@@ -38,7 +38,7 @@ export default function Login() {
       <Form onSubmit={handleSubmit}>
         <Form.Group >
           <Form.Label>User:</Form.Label>
-          <Form.Control type="text" value={user} id="userName" name="userName" onChange={e => setUser(e.target.value)} />
+          <Form.Control type="text" value={userName} id="userName" name="userName" onChange={e => setUser(e.target.value)} />
         </Form.Group>
         <br />
         <Form.Group>
