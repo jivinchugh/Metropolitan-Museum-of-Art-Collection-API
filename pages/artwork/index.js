@@ -5,7 +5,6 @@ import useSWR from 'swr';
 import Error from 'next/error';
 import { Row, Col, Pagination, Card } from 'react-bootstrap';
 import ArtworkCard from '../../components/ArtworkCard';
-
 const PER_PAGE = 12;
 
 const Artwork = () => {
@@ -28,7 +27,6 @@ const Artwork = () => {
         }
     };
 
-    
     useEffect(() => {
         if (data) {
             if (data.objectIDs && data.objectIDs.length > 0) {
@@ -88,5 +86,6 @@ const Artwork = () => {
             )}
         </>
     );
-}    
+}
+
 export default Artwork;
