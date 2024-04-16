@@ -20,9 +20,7 @@ export default function Register(props) {
     return (
         <>
             <Card bg="light">
-
                 <div>
-
                     <Card.Body>
                         <h2>Register</h2>
                         Register for an account:

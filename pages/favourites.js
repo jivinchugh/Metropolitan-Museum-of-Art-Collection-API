@@ -6,8 +6,7 @@ import { favouritesAtom } from '@/store';
 const Favourites = () => {
     const [favouritesList] = useAtom(favouritesAtom);
 
-    if (!favouritesList) return null; // Return null if favouritesList is not yet available
-
+    if (!favouritesList) return null; 
     return (
         <div className="container mt-5">
             <h1 className="mb-4">Favourites</h1>
