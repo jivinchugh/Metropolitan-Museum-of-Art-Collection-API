@@ -10,13 +10,15 @@
 * 
 ********************************************************************************/
 import { Container, Row, Col } from 'react-bootstrap';
+import Image from 'next/image'; // Import Image from next/image
 
 const Home = () => {
     return (
         <Container>
             <Row>
                 <Col md={12} className="text-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Metropolitan_Museum_of_Art_%28The_Met%29_-_Central_Park%2C_NYC.jpg" alt="MET Building" className="img-fluid rounded" style={{ maxWidth: '80%', margin: 'auto' }} />
+                    {/* Replace <img> tag with <Image> */}
+                    <Image src="https://upload.wikimedia.org/wikipedia/commons/3/30/Metropolitan_Museum_of_Art_%28The_Met%29_-_Central_Park%2C_NYC.jpg" alt="MET Building" className="img-fluid rounded" layout="responsive" width={1200} height={800} style={{ maxWidth: '80%', margin: 'auto' }} />
                 </Col>
             </Row>
             <br></br>
