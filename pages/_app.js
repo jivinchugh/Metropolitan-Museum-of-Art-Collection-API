@@ -5,22 +5,29 @@ import { getToken } from '@/lib/authenticate';
 import RouteGuard from '@/components/RouteGuard';
 
 export default function App({ Component, pageProps }) {
-  const fetcher = async (url) => {
-    const response = await fetch(url, {
-      headers: { Authorization: `JWT ${getToken()}` }
-    });
-    return response.json();
-  };
   return (
-    <>
-      <RouteGuard>
-        <SWRConfig value={{ fetcher }}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
-      </RouteGuard>
-    </>
+    <RouteGuard>
+      <SWRConfig value={{
+        fetcher:
+          async url => {
+            const res = await fetch(url, { headers: { Authorization: `JWT ${getToken()}` } })
+            // If the status code is not in the range 200-299,
+            // we still try to parse and throw it.
+            if (!res.ok) {
+              const error = new Error('An error occurred while fetching the data.')
+              // Attach extra info to the error object.
+              error.info = await res.json()
+              error.status = res.status
+              throw error
+            }
+            return res.json()
+          }
+      }}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </SWRConfig>
+    </RouteGuard>
+
   );
 }
-
