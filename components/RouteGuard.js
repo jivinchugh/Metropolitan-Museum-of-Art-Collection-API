@@ -1,35 +1,37 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useCallback } from 'react';
 import { useAtom } from 'jotai';
-import { getFavourites, getHistory } from '@/lib/userData';
 import { favouritesAtom, searchHistoryAtom } from '@/store';
+import { getFavourites, getHistory } from '@/lib/userData';
 import { isAuthenticated } from '@/lib/authenticate';
+
 const PUBLIC_PATHS = ['/', '/login', '/_error', '/register'];
 
 export default function RouteGuard(props) {
     const router = useRouter();
-    const [authorized, setAuthorized] = useState(false);
-
     const [favouritesList, setFavouritesList] = useAtom(favouritesAtom);
     const [searchHistory, setSearchHistory] = useAtom(searchHistoryAtom);
+    const [authorized, setAuthorized] = useState(false);
 
-    // Define updateAtoms inside useEffect callback using useCallback
-    const updateAtoms = useCallback(async () => {
-        setSearchHistory(await getHistory());
+    const updateAtoms = async () => {
         setFavouritesList(await getFavourites());
-    }, [setSearchHistory, setFavouritesList]);
+        setSearchHistory(await getHistory());
+    };
 
     useEffect(() => {
-        updateAtoms(); // Call updateAtoms inside useEffect
-        const handleRouteChange = (url) => authCheck(url);
-        router.events.on('routeChangeComplete', handleRouteChange);
+        updateAtoms();
+        // on initial load - run auth check
+        authCheck(router.pathname);
+        // on route change complete - run auth check
+        router.events.on('routeChangeComplete', authCheck);
+        // unsubscribe from events in useEffect return function
         return () => {
-            router.events.off('routeChangeComplete', handleRouteChange);
+            router.events.off('routeChangeComplete', authCheck);
         };
-    }, [router.events, router.pathname, updateAtoms]); // Remove authCheck from useEffect dependencies
+    }, []);
 
-    // Define authCheck inside useEffect callback using useCallback
-    const authCheck = useCallback((url) => {
+    function authCheck(url) {
+        // redirect to login page if accessing a private page and not logged in
         const path = url.split('?')[0];
         if (!isAuthenticated() && !PUBLIC_PATHS.includes(path)) {
             setAuthorized(false);
@@ -37,7 +39,7 @@ export default function RouteGuard(props) {
         } else {
             setAuthorized(true);
         }
-    }, [router, setAuthorized]);
+    }
 
     return <>{authorized && props.children}</>;
 }
